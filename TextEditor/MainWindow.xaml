@@ -13,10 +13,39 @@
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         >
+
+    <Window.Resources>
+        <Style TargetType="MenuItem" x:Key="HeaderMenus">
+            <Setter Property="Padding" Value="10 0"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+    </Window.Resources>
+    
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="30" UseAeroCaptionButtons="True" ResizeBorderThickness="2" />
-
     </WindowChrome.WindowChrome>
+
+    <Window.CommandBindings>
+        <CommandBinding Command="Open" Executed="OpenFile"/>
+        <CommandBinding Command="New" Executed="NewFile"/>
+        <CommandBinding Command="SaveAs" Executed="SaveFileForce"/>
+        <CommandBinding Command="Close" Executed="QuitProgram"/>
+        <CommandBinding Command="Save" Executed="SaveFile"/>
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Key="O" Modifiers="Ctrl" Command="Open"/>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="Save"/>
+        <KeyBinding Key="S" Modifiers="Alt" Command="SaveAs"/>
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="New"/>
+    </Window.InputBindings>
 
     <Grid FocusManager.FocusedElement="{Binding ElementName=tb_main}">
         <Grid.RowDefinitions>
@@ -35,15 +64,29 @@
         <TextBox x:Name="tb_main" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
                  Background="White" BorderThickness="0" FontSize="15" 
                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" 
-                 AcceptsReturn="True" Padding="5" TextChanged="updateInfo" MouseWheel="tb_main_zoom"/>
+                 AcceptsReturn="True" Padding="5" TextChanged="updateInfo" MouseWheel="Zoom"/>
 
         <!-- Toolbar -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" 
                     Background="#f5f5f5" Grid.ColumnSpan="2">
-            <Button Padding="20 0" Foreground="Black" Background="Transparent" 
-                    BorderThickness="0" Click="btn_Save">Save</Button>
-            <Button Padding="20 0" Foreground="Black" Background="Transparent" 
-                    BorderThickness="0" Click="btn_Open">Open</Button>
+            <Menu>
+                <MenuItem Header="File" Style="{StaticResource HeaderMenus}">
+                    <MenuItem Command="New" Header="New" InputGestureText="Ctrl+N"/>
+                    <Separator/>
+                    <MenuItem Command="SaveAs" Header="Save" InputGestureText="Ctrl+S"/>
+                    <MenuItem Command="SaveAs" Header="Save As..." InputGestureText="Alt+S"/>
+
+                    <MenuItem Command="Open" Header="Open"/>
+                    <Separator/>
+                    <MenuItem Command="Close" Header="Exit" InputGestureText="Alt+F4"/>
+                </MenuItem>
+
+                <MenuItem Header="Edit" Style="{StaticResource HeaderMenus}">
+                    <MenuItem Command="Copy" Header="Copy" InputGestureText="Ctrl+C"/>
+                    <MenuItem Command="Paste" Header="Paste" InputGestureText="Ctrl+V"/>
+                    <MenuItem Command="Cut" Header="Cut" InputGestureText="Ctrl+X"/>
+                </MenuItem>
+            </Menu>
 
             <StackPanel.Effect>
                 <DropShadowEffect BlurRadius="2" RenderingBias="Quality" ShadowDepth="0"/>
@@ -54,9 +97,9 @@
         <Grid Grid.Row="0" Background="#525252" Grid.ColumnSpan="2">
             <Label x:Name="lbl_name" HorizontalAlignment="Center"
                    FontSize="14" Foreground="#a3a3a3">Texteditor</Label>
-            <Button x:Name="test" Width="40" BorderThickness="0" 
+            <Button Command="Close" Width="40" BorderThickness="0" 
                     HorizontalAlignment="Right" Foreground="White" 
-                    Background="Transparent" Click="btn_Quit" 
+                    Background="Transparent"  
                     WindowChrome.IsHitTestVisibleInChrome="True" >
                 X
             </Button>
@@ -66,15 +109,13 @@
         <!-- Amount of Lines / Zeichen -->
         <DockPanel Grid.Row="3" Grid.ColumnSpan="2" Background="White">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button x:Name="lbl_zoom_info" Content="100%" Margin="0 0 10 0" Width="60" Background="Transparent" BorderThickness="0" Click="reset_zoom"/>
-                <Label x:Name="lbl_info" Content="1 Line | 0 Characters" 
-                   Margin="0 0 10 0" />
-                
+                <Button x:Name="lbl_zoom_info" Content="100%" Margin="0 0 10 0" Width="60" Click="ResetZoom"/>
+                <Label x:Name="lbl_info" Margin="0 0 10 0">1 Line | 0 Characters</Label>
+
             </StackPanel>
 
             <DockPanel.Effect>
-                <DropShadowEffect BlurRadius="2" RenderingBias="Quality" 
-                                  ShadowDepth="0"/>
+                <DropShadowEffect BlurRadius="2" RenderingBias="Quality" ShadowDepth="0"/>
             </DockPanel.Effect>
         </DockPanel>
     </Grid>
