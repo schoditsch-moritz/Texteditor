@@ -8,6 +8,8 @@
         Title="TextEditor" 
         Height="450" 
         Width="800"
+        MinHeight="450"
+        MinWidth="400"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         >
@@ -26,19 +28,22 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- TextBox -->
         <TextBox x:Name="tb_main" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
                  Background="White" BorderThickness="0" FontSize="15" 
                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" 
-                 AcceptsReturn="True" Padding="5" TextChanged="updateInfo"/>
+                 AcceptsReturn="True" Padding="5" TextChanged="updateInfo" MouseWheel="tb_main_zoom"/>
 
         <!-- Toolbar -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Background="#f5f5f5" Grid.ColumnSpan="2">
-            <Button Padding="20 0" Foreground="Black" Background="Transparent" BorderThickness="0" Click="btn_Save">Save</Button>
-            <Button Padding="20 0" Foreground="Black" Background="Transparent" BorderThickness="0" Click="btn_Load">Load</Button>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" 
+                    Background="#f5f5f5" Grid.ColumnSpan="2">
+            <Button Padding="20 0" Foreground="Black" Background="Transparent" 
+                    BorderThickness="0" Click="btn_Save">Save</Button>
+            <Button Padding="20 0" Foreground="Black" Background="Transparent" 
+                    BorderThickness="0" Click="btn_Open">Open</Button>
 
             <StackPanel.Effect>
                 <DropShadowEffect BlurRadius="2" RenderingBias="Quality" ShadowDepth="0"/>
@@ -47,20 +52,30 @@
         
         <!-- Title & Quit -->
         <Grid Grid.Row="0" Background="#525252" Grid.ColumnSpan="2">
-            <Label x:Name="lbl_name" HorizontalAlignment="Center" FontSize="14" Foreground="#a3a3a3">Texteditor</Label>
-            <Button x:Name="test" Width="40" BorderThickness="0" HorizontalAlignment="Right" Foreground="White" Background="Transparent" Click="btn_Quit" WindowChrome.IsHitTestVisibleInChrome="True" >
+            <Label x:Name="lbl_name" HorizontalAlignment="Center"
+                   FontSize="14" Foreground="#a3a3a3">Texteditor</Label>
+            <Button x:Name="test" Width="40" BorderThickness="0" 
+                    HorizontalAlignment="Right" Foreground="White" 
+                    Background="Transparent" Click="btn_Quit" 
+                    WindowChrome.IsHitTestVisibleInChrome="True" >
                 X
             </Button>
            
         </Grid>
         
         <!-- Amount of Lines / Zeichen -->
-        <Grid Grid.Row="3" Grid.ColumnSpan="2" Background="White" >
-            <Label x:Name="lbl_info" Content="1 Line | 0 Characters" HorizontalAlignment="Right" Margin="0 0 10 0" />
+        <DockPanel Grid.Row="3" Grid.ColumnSpan="2" Background="White">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="lbl_zoom_info" Content="100%" Margin="0 0 10 0" Width="60" Background="Transparent" BorderThickness="0" Click="reset_zoom"/>
+                <Label x:Name="lbl_info" Content="1 Line | 0 Characters" 
+                   Margin="0 0 10 0" />
+                
+            </StackPanel>
 
-            <Grid.Effect>
-                <DropShadowEffect BlurRadius="2" RenderingBias="Quality" ShadowDepth="0"/>
-            </Grid.Effect>
-        </Grid>
+            <DockPanel.Effect>
+                <DropShadowEffect BlurRadius="2" RenderingBias="Quality" 
+                                  ShadowDepth="0"/>
+            </DockPanel.Effect>
+        </DockPanel>
     </Grid>
 </Window>

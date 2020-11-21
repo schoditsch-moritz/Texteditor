@@ -22,8 +22,13 @@ namespace TextEditor
     /// </summary>
     public partial class MainWindow : Window
     {
+        public const int DEFAULT_FONT_SIZE = 15;
+        private int zoom, currentFontSize;
+
         public MainWindow()
         {
+            zoom = 100;
+            currentFontSize = DEFAULT_FONT_SIZE;
             InitializeComponent();
         }
 
@@ -47,9 +52,10 @@ namespace TextEditor
                 lbl_name.Content = title;
                 Title = title;
             }
+            tb_main.Focus();
         }
 
-        private void btn_Load(object sender, RoutedEventArgs e)
+        private void btn_Open(object sender, RoutedEventArgs e)
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
             fileDialog.Filter = "txt files (*.txt)|*.txt";
@@ -57,22 +63,50 @@ namespace TextEditor
 
             if (fileDialog.ShowDialog().GetValueOrDefault())
             {
-                StreamReader writer = new StreamReader(fileDialog.OpenFile());
+                StreamReader reader = new StreamReader(fileDialog.OpenFile());
                 tb_main.Text = "";
-                while (!writer.EndOfStream)
-                    tb_main.Text += writer.ReadLine() + "\n";
+                while (!reader.EndOfStream)
+                    tb_main.Text += reader.ReadLine() + "\n";
 
                 string title = "Texteditor | " + fileDialog.FileName;
                 lbl_name.Content = title;
                 Title = title;
-                writer.Close();
+                reader.Close();
             }
+            tb_main.Focus();
         }
 
         private void updateInfo(object sender, TextChangedEventArgs e)
         {
-            int lines = tb_main.LineCount, chars = tb_main.Text.Count();
-            lbl_info.Content = lines  + " Line" + (lines != 1 ? "s" : "") + "  | " + chars + " Character" + (chars != 1 ? "s" : "");
+            TextBox textBox = sender as TextBox;
+            int lines = textBox.LineCount, chars = textBox.Text.Count();
+            lbl_info.Content = lines + " Line" + (lines != 1 ? "s" : "") + "  | " + chars + " Character" + (chars != 1 ? "s" : "");
         }
+
+        private void tb_main_zoom(object sender, MouseWheelEventArgs e)
+        {
+            if (!Keyboard.IsKeyDown(Key.LeftCtrl)) return;
+            if (e.Delta > 0) zoom += 10;
+            else zoom -= 10;
+
+            if (zoom <= 10) zoom = 10;
+            else if (zoom >= 600) zoom = 600;
+
+            zoomInOut();
+        }
+
+        private void reset_zoom(object sender, RoutedEventArgs e)
+        {
+            zoom = 100;
+            zoomInOut();
+        }
+
+        private void zoomInOut()
+        {
+            tb_main.FontSize = currentFontSize + (zoom - 100) / 10;
+            lbl_zoom_info.Content = zoom + "%";
+            tb_main.Focus();
+        }
+
     }
 }
